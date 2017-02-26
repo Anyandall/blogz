@@ -21,7 +21,10 @@ class BlogHandler(webapp2.RequestHandler):
         """
 
         # TODO - filter the query so that only posts by the given user
-        return None
+
+        query = Post.all().order('-created')
+        user_query = query.filter('author =', user)
+        return user_query.fetch(limit=limit, offset=offset)
 
     def get_user_by_name(self, username):
         """ Get a user object from the db, based on their username """
@@ -130,6 +133,7 @@ class NewPostHandler(BlogHandler):
         """ Create a new blog post if possible. Otherwise, return with an error message """
         title = self.request.get("title")
         body = self.request.get("body")
+        author = self.request.get("username")
 
         if title and body:
 
@@ -280,7 +284,7 @@ class LoginHandler(BlogHandler):
             self.render_login_form(error="Invalid username")
         elif hashutils.valid_pw(submitted_username, submitted_password, user.pw_hash):
             self.login_user(user)
-            self.redirect('/blog/newpost')
+            self.redirect('/blog/newpost?username=%s' % user)
         else:
             self.render_login_form(error="Invalid password")
 
