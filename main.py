@@ -133,7 +133,7 @@ class NewPostHandler(BlogHandler):
         """ Create a new blog post if possible. Otherwise, return with an error message """
         title = self.request.get("title")
         body = self.request.get("body")
-        author = self.request.get("username")
+        author = self.request.get("user")
 
         if title and body:
 
@@ -284,7 +284,7 @@ class LoginHandler(BlogHandler):
             self.render_login_form(error="Invalid username")
         elif hashutils.valid_pw(submitted_username, submitted_password, user.pw_hash):
             self.login_user(user)
-            self.redirect('/blog/newpost?username=%s' % user)
+            self.redirect('/blog/newpost?username=%s' % submitted_username)
         else:
             self.render_login_form(error="Invalid password")
 
