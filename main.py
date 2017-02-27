@@ -133,7 +133,7 @@ class NewPostHandler(BlogHandler):
         """ Create a new blog post if possible. Otherwise, return with an error message """
         title = self.request.get("title")
         body = self.request.get("body")
-        author = self.request.get("user")
+        author = self.request.get("username")
 
         if title and body:
 
@@ -141,7 +141,7 @@ class NewPostHandler(BlogHandler):
             post = Post(
                 title=title,
                 body=body,
-                author=self.user)
+                author=author)
             post.put()
 
             # get the id of the new post, so we can render the post's page (via the permalink)
